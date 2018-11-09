@@ -1,6 +1,10 @@
 mod ascii;
+mod latex;
 
-use crate::{output::ascii::Ascii, Cause, Disj, KB};
+use crate::{
+    output::{ascii::Ascii, latex::LaTeX},
+    Cause, Disj, KB,
+};
 use failure::Fallible;
 use std::{io::stdout, str::FromStr};
 
@@ -30,7 +34,12 @@ impl OutputMode {
             OutputMode::Ascii => {
                 render_sequent(&mut next_index, &mut Ascii(stdout(), false), kb, &disj)
             }
-            OutputMode::LaTeX => unimplemented!(), // latex::render_sequent(kb, &disj),
+            OutputMode::LaTeX => {
+                println!("\\begin{{prooftree}}");
+                let n = render_sequent(&mut next_index, &mut LaTeX(stdout()), kb, &disj)?;
+                println!("\\end{{prooftree}}");
+                Ok(n)
+            }
             OutputMode::Silent => Ok(0),
             OutputMode::Unicode => {
                 render_sequent(&mut next_index, &mut Ascii(stdout(), true), kb, &disj)
