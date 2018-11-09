@@ -1,0 +1,10 @@
+[package]
+name = "resolution"
+version = "0.1.0"
+authors = ["Nathan Ringo <remexre@gmail.com>"]
+
+[dependencies]
+structopt = "0.2.13"
+failure = "0.1.3"
+stderrlog = "0.4.1"
+log = "0.4.6"
