@@ -2,7 +2,7 @@ use crate::{output::Outputter, Disj};
 use failure::Fallible;
 use std::{cmp::max, io::Write};
 
-pub struct Ascii<W>(pub W, pub usize);
+pub struct Ascii<W>(pub W, pub bool);
 
 impl<W: Write> Ascii<W> {
     fn chs(&mut self, ch: char, n: usize) -> Fallible<()> {
@@ -39,12 +39,20 @@ impl<W: Write> Ascii<W> {
 
 impl<W: Write> Outputter for Ascii<W> {
     fn render_sequent_assumed(&mut self, disj: &Disj, n: usize) -> Fallible<()> {
-        let disj = disj.to_string();
+        let disj = if self.1 {
+            disj.display_unicode().to_string()
+        } else {
+            disj.to_string()
+        };
         self.render_two_lines(n, "Assumed", &disj, "AS")
     }
 
     fn render_sequent_known(&mut self, disj: &Disj, n: usize) -> Fallible<()> {
-        let disj = disj.to_string();
+        let disj = if self.1 {
+            disj.display_unicode().to_string()
+        } else {
+            disj.to_string()
+        };
         self.render_two_lines(n, "Known", &disj, "KB")
     }
 
@@ -57,14 +65,22 @@ impl<W: Write> Outputter for Ascii<W> {
         c: char,
     ) -> Fallible<()> {
         let top = format!("({})   ({})", l, r);
-        let bot = disj.to_string();
+        let bot = if self.1 {
+            disj.display_unicode().to_string()
+        } else {
+            disj.to_string()
+        };
         let reason = format!("AN({})", c);
         self.render_two_lines(n, &top, &bot, &reason)
     }
 
     fn render_sequent_union(&mut self, disj: &Disj, n: usize, l: usize, r: usize) -> Fallible<()> {
         let top = format!("({})   ({})", l, r);
-        let bot = disj.to_string();
+        let bot = if self.1 {
+            disj.display_unicode().to_string()
+        } else {
+            disj.to_string()
+        };
         self.render_two_lines(n, &top, &bot, "UN")
     }
 }

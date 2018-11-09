@@ -28,11 +28,13 @@ impl OutputMode {
         let mut next_index = 0;
         match self {
             OutputMode::Ascii => {
-                render_sequent(&mut next_index, &mut Ascii(stdout(), 0), kb, &disj)
+                render_sequent(&mut next_index, &mut Ascii(stdout(), false), kb, &disj)
             }
             OutputMode::LaTeX => unimplemented!(), // latex::render_sequent(kb, &disj),
             OutputMode::Silent => Ok(0),
-            OutputMode::Unicode => unimplemented!(), // unicode::render_sequent(kb, &disj),
+            OutputMode::Unicode => {
+                render_sequent(&mut next_index, &mut Ascii(stdout(), true), kb, &disj)
+            }
         }
     }
 }
