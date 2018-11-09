@@ -47,7 +47,10 @@ fn run(opts: Options) -> Fallible<()> {
         exit(1);
     }
 
-    opts.output_mode.render_contradicted_kb(&kb)
+    let n = opts.output_mode.render_contradicted_kb(&kb)?;
+    debug!("Outputted {} sequents.", n);
+
+    Ok(())
 }
 
 #[derive(StructOpt)]
