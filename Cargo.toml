@@ -1,7 +1,11 @@
 [package]
-name = "resolution"
-version = "0.1.0"
 authors = ["Nathan Ringo <remexre@gmail.com>"]
+description = "A solver for the resolution problems in CSCI4511W."
+homepage = "https://github.com/remexre/resolution"
+license = "Apache-2.0/MIT"
+name = "resolution"
+repository = "https://github.com/remexre/resolution"
+version = "0.1.0"
 
 [dependencies]
 structopt = "0.2.13"
