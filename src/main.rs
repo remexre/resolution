@@ -7,7 +7,7 @@ extern crate structopt;
 
 use failure::Fallible;
 use resolution::{OutputMode, KB};
-use std::{path::PathBuf, process::exit};
+use std::{fs::File, io::stdout, path::PathBuf, process::exit};
 use structopt::StructOpt;
 
 fn main() {
@@ -47,7 +47,13 @@ fn run(opts: Options) -> Fallible<()> {
         exit(1);
     }
 
-    let n = opts.output_mode.render_contradicted_kb(&kb)?;
+    let n = match opts.output_path {
+        Some(path) => {
+            let f = File::create(path)?;
+            opts.output_mode.render_contradicted_kb(&kb, f)?
+        }
+        None => opts.output_mode.render_contradicted_kb(&kb, stdout())?,
+    };
     debug!("Outputted {} sequents.", n);
 
     Ok(())
@@ -68,6 +74,10 @@ struct Options {
     /// The file to read.
     #[structopt(parse(from_os_str))]
     pub path: PathBuf,
+
+    /// The output file to write to.
+    #[structopt(short = "o", long = "output", parse(from_os_str))]
+    pub output_path: Option<PathBuf>,
 
     /// The output mode to use.
     #[structopt(short = "O", long = "output-mode", default_value = "ascii")]

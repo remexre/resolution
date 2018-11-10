@@ -36,12 +36,17 @@ impl<W: Write> LaTeX<W> {
 }
 
 impl<W: Write> Outputter for LaTeX<W> {
-    fn render_sequent_assumed(&mut self, disj: &Disj, n: usize) -> Fallible<()> {
-        self.render_sequent_known(disj, n)
+    fn render_sequent_assumed(&mut self, disj: &Disj, _: usize) -> Fallible<()> {
+        writeln!(self.0, "\\AxiomC{{assumed}}")?;
+        write!(self.0, "\\UnaryInfC{{$")?;
+        self.render_disj(disj)?;
+        writeln!(self.0, "$}}")?;
+        Ok(())
     }
 
     fn render_sequent_known(&mut self, disj: &Disj, _: usize) -> Fallible<()> {
-        write!(self.0, "\\AxiomC{{$")?;
+        writeln!(self.0, "\\AxiomC{{known}}")?;
+        write!(self.0, "\\UnaryInfC{{$")?;
         self.render_disj(disj)?;
         writeln!(self.0, "$}}")?;
         Ok(())
